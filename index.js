@@ -29,6 +29,8 @@ async function run() {
 
         const database = client.db("coffeeDB");
         const coffeeCollection = database.collection("coffee");
+        const databaseUser = client.db("coffeeDB");
+        const userCollection = databaseUser.collection("user");
 
         app.get('/addedProduct', async (req, res) => {
             const cursor = coffeeCollection.find();
@@ -59,7 +61,7 @@ async function run() {
                     details: updateCoffee.details
                 }
             }
-            const result = await coffeeCollection.updateOne(filter,coffee, options);
+            const result = await coffeeCollection.updateOne(filter, coffee, options);
             res.send(result)
 
         })
@@ -69,6 +71,15 @@ async function run() {
             const result = await coffeeCollection.insertOne(user);
             res.send(result);
         })
+
+        // user Collection server.
+        app.post('/user', async(req, res) => {
+            const user = req.body;
+            const result = await userCollection.insertOne(user)
+            res.send(result);
+        })
+
+
 
         app.delete('/addedProduct/:id', async (req, res) => {
             const id = req.params.id;
